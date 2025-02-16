@@ -3,6 +3,7 @@ name: Build and Deploy
 env: 
   PACKAGE_NAME: "${{ github.sha }}.zip"
 
+  
 on:
   workflow_call:
     inputs:
@@ -64,14 +65,15 @@ jobs:
       uses: ./.github/workflows/release_versioning.yml
       secrets: inherit
           
-  # tag_n_release:
-  #     needs: release_versioning
-  #     permissions:
-  #             contents: write
-  #     name: Tag and create release
-  #     uses: ./.github/workflows/tag_n_release.yaml
-  #     with:
-  #         ARTIFACT_NAME: "${{ github.sha }}.zip"
-        
-            
+  tag_n_release:
+      needs: release_versioning
+      permissions:
+              contents: write
+      name: Tag and create release
+      uses: ./.github/workflows/tag_n_release.yaml
+      with:
+          ARTIFACT_NAME: "${{ github.sha }}.zip"
+
+
+          
                
