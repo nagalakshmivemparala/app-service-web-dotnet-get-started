@@ -1,0 +1,20 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: 
+      - main
+  
+permissions: 
+  contents: write
+  pull-requests: read
+  deployments: read
+
+jobs:
+  build:
+    name: Build and Release
+    uses: ./.github/workflows/build.yml
+    with:
+      SOLUTION_FILE: 'aspnet-get-started.sln'
+      BUILD_DIR: '_build'
+

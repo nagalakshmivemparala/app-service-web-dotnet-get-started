@@ -1,0 +1,77 @@
+name: Build and Deploy
+
+env: 
+  PACKAGE_NAME: "${{ github.sha }}.zip"
+
+on:
+  workflow_call:
+    inputs:
+      SOLUTION_FILE:
+        required: true
+        type: string
+      BUILD_DIR:
+        required: true
+        type: string
+
+permissions: 
+  contents: write
+  pull-requests: read
+  deployments: read
+
+jobs:
+  build_project:
+    name: Build and Packaging
+    runs-on: windows-2019
+    permissions: 
+      contents: read 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup msbuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2.0.0
+
+      - name: Restore NuGet
+        run: |
+          nuget restore ${{ inputs.SOLUTION_FILE }}
+
+      - name: Build
+        run: |
+          msbuild.exe ${{ inputs.SOLUTION_FILE }} /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../${{ inputs.BUILD_DIR }}"
+
+      - name: Zipping the build folder
+        run: |
+          choco install 7zip --no-progress -y
+          7z a  -tzip -r "./${{ env.PACKAGE_NAME }}" "./${{ inputs.BUILD_DIR }}/*"
+          dir
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PACKAGE_NAME }}
+          path: ./${{ env.PACKAGE_NAME }}
+          if-no-files-found: error
+  release_versioning:
+      name: Release Versioning
+      needs: build_project
+      permissions: 
+           contents: read
+           pull-requests: read
+
+      uses: ./.github/workflows/release_versioning.yml
+      secrets: inherit
+          
+  # tag_n_release:
+  #     needs: release_versioning
+  #     permissions:
+  #             contents: write
+  #     name: Tag and create release
+  #     uses: ./.github/workflows/tag_n_release.yaml
+  #     with:
+  #         ARTIFACT_NAME: "${{ github.sha }}.zip"
+        
+            
+               
