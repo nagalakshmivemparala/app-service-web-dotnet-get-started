@@ -16,8 +16,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+    # - name: Set up Docker Buildx
+    #   uses: docker/setup-buildx-action@v2
+    - name: Set Docker to use Windows Containers
+      run: |
+             & 'C:\Program Files\Docker\Docker\DockerCli.exe' -SwitchToWindowsContainers
+             docker info  # Verify Docker is using Windows Containers
+          
 
     - name: Log in to Azure
       uses: azure/login@v1
