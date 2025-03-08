@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Use Windows-based runner to build Windows container images
+    runs-on: windows-2019  # Use Windows-based runner to build Windows container images
 
     steps:
     - name: Checkout code
