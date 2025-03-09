@@ -1,5 +1,6 @@
 # Use the official Windows-based .NET Framework 4.8 image as the base image
-FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8 AS base
+FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2019
+
 
 # Set the working directory to the folder where IIS serves web applications
 WORKDIR /inetpub/wwwroot
