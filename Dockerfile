@@ -6,10 +6,11 @@ FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2019
 WORKDIR /inetpub/wwwroot
 
 # Copy the published application files into the container
-COPY ./bin/Release/Publish/ .
+COPY ./downloaded_artifact/ /app/
 
 # Expose port 80 (default for web applications)
 EXPOSE 80
 
 # Set the entry point for the container to monitor the IIS service
-ENTRYPOINT ["C:\\ServiceMonitor.exe", "w3svc"]
+ENTRYPOINT ["dotnet", "aspnet-get-started.dll"]
+
