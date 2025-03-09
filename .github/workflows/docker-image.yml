@@ -55,10 +55,17 @@ jobs:
       run: |
         echo ${{ secrets.AZURE_CLIENT_SECRET }} | docker login ${{ secrets.AZURE_REGISTRY_URL }} -u ${{ secrets.AZURE_CLIENT_ID }} --password-stdin
 
+    # - name: Build Docker image
+    #   run: |
+    #       # Build the Docker image using the Dockerfile in the current directory
+    #       docker build -f ./Dockerfile -t ${{ secrets.AZURE_REGISTRY_URL }}/app-service-web-dotnet-get-started:latest .  # Image tag
     - name: Build Docker image
       run: |
-          # Build the Docker image using the Dockerfile in the current directory
-          docker build -f ./Dockerfile -t ${{ secrets.AZURE_REGISTRY_URL }}/app-service-web-dotnet-get-started:latest .  # Image tag
+        docker build -t ${{ secrets.AZURE_REGISTRY_URL }}/my-app-image:latest -f Dockerfile ./downloaded_artifact
 
+    - name: Push Docker image to ACR
+      run: |
+           docker push ${{ secrets.AZURE_REGISTRY_URL }}/my-app-image:latest
+        
     - name: Logout from Docker
       run: docker logout ${{ secrets.AZURE_REGISTRY_URL }}
