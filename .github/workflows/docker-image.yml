@@ -22,8 +22,8 @@ jobs:
         powershell -Command "& 'C:\Program Files\Docker\Docker\DockerCli.exe' -SwitchToWindowsContainers"
         docker info  # Verify Docker is using Windows Containers
           
-        - name: Set up Docker
-        uses: docker/setup-docker-action@v4
+    - name: Set up Docker
+      uses: docker/setup-docker-action@v4
       
     - name: Log in to Azure
       uses: azure/login@v1
