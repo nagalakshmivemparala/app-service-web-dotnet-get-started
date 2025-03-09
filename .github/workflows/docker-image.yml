@@ -4,12 +4,9 @@ on:
   push:
     branches:
       - test  # Trigger the workflow on push to the main branch
-#   pull_request:
-#     branches:
-#       - main  # Trigger the workflow on pull requests targeting main branch
-
-# on:
-#   workflow_call: 
+  pull_request:
+    branches:
+      - main  # Trigger the workflow on pull requests targeting main branc
 
 
 jobs:
@@ -32,7 +29,7 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v3
       with:
-        name: ${{ needs.build_project.outputs.PACKAGE_NAME }}  # Reference the uploaded artifact name
+        name: ${{ env.PACKAGE_NAME }}  # Reference the uploaded artifact name
         path: ./downloaded_artifact  # Specify where the artifact will be downloaded
 
     - name: Extract the downloaded artifact (if it's a zip file)
